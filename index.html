@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="http://d3js.org/d3.v3.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+
+    <style>
+    	h2 {
+        text-align: center;
+        color: black;
+        font-family: Arial;
+      }
+      div.years_buttons {
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+      }
+      div.years_buttons div {
+        background-color: rgb(300, 300, 300);
+        padding: 3px;
+        margin: 7px;
+        cursor: pointer;
+      }
+      div.chart {
+        width: 1000px;
+        height: 400px;
+      }
+      div.chart-holder {
+        display: flex;
+        justify-content: center;
+      }
+
+    </style>
+
+    <script type="text/javascript">
+      function draw(data) {
+
+      /*
+        Setup code to build the title and the svg element containing the visualization
+      */
+          "use strict";
+					console.log('data', data);
+          d3.select("body")
+          .append("div")
+          .append("h2")
+          .text("Prosper Loans: Rating vs Credit Score");
+
+          d3.select("body")
+          .select("div")
+          .append("div")
+          .attr("class", "chart-holder")
+          .append("div")
+          .attr("class", "chart");
+          var svg = dimple.newSvg(".chart", "100%", "100%");
+      /*
+        Dimple.js Chart construction code
+      */
+
+          var myChart = new dimple.chart(svg, data);
+
+
+          //Set up x axis (Prosper Rating)
+          var x = myChart.addCategoryAxis("x", "Loan Rating");
+          x.addOrderRule(["HR", "E", "D", "C", "B", "A", "AA"]);
+          x.title = "Prosper Loan Rating, from highest risk (HR) to lowest risk (AA)";
+          x.fontSize = 12;
+          //First calculate the minimum and maximum values the y axis can take
+          //so we can set min and max axis values.
+          var min_axis = d3.min(data, function(d) {
+            return parseFloat(d['Low_StdDev']);
+          });
+
+          var max_axis = d3.max(data, function(d) {
+            return parseFloat(d['High_StdDev']);
+          });
+          var min_num_loans = d3.min(data, function(d) {
+            return parseFloat(d['# of Loans']);
+          });
+
+          var max_num_loans = d3.max(data, function(d) {
+            return parseFloat(d['# of Loans']);
+          });
+
+
+          //Set up y axis (Estimated Return)
+          var y = myChart.addMeasureAxis("y", "Average");
+          y.overrideMin = min_axis;
+          y.overrideMax = max_axis;
+
+          y.fontSize = 16;
+          y.title = "Average Credit Score";
+
+          var y_num = myChart.addMeasureAxis("y", "# of Loans");
+          //y_num.overrideMin = min_num_loans;
+          //y_num.overrideMax = max_num_loans;
+          //y_num.fontSize = 16;
+
+				//Add series for median (line and scatter), 5th, and 95th percentile estimated return
+
+          var average = myChart.addSeries("AVERAGE", dimple.plot.line, [x,y]);
+          var num_loans = myChart.addSeries("Num Loans", dimple.plot.bar, [x,y_num]);
+          myChart.assignColor("Num Loans", "#333333", "#000000", 0.1);
+
+          var LSD = myChart.addMeasureAxis("y", "Low_StdDev");
+          LSD.hidden = true;
+          LSD.overrideMin = min_axis;
+          LSD.overrideMax = max_axis;
+          var Low_StdDev = myChart.addSeries("AVG - 1 STD DEV", dimple.plot.line, [x,LSD]);
+				  myChart.assignColor("AVG - 1 STD DEV", "orange");
+
+
+          var HSD = myChart.addMeasureAxis("y", "High_StdDev");
+          HSD.hidden = true;
+          HSD.overrideMin = min_axis;
+          HSD.overrideMax = max_axis;
+          var High_StdDev = myChart.addSeries("AVG + 1 STD DEV", dimple.plot.line,[x,HSD]);
+          myChart.assignColor("AVG + 1 STD DEV", "green");
+
+
+          var legend = myChart.addLegend("75%", "2.5%", 100, 50, "left",[High_StdDev,average,Low_StdDev]);
+
+          //Set a storyboard to interact/animate by year
+          var myStoryboard = myChart.setStoryboard("Time Period", ticker);
+
+          function ticker(e) {
+  					if (e === time_period[time_period.length -1]){
+  						myStoryboard.pauseAnimation();
+  					}
+  				}
+
+            myStoryboard.autoplay = true;
+            //Add year buttons to the page
+            var time_period = ["2009 - 2H", "2010 - 1H", "2010 - 2H",
+                                "2011 - 1H", "2011 - 2H", "2012 - 1H", "2012 - 2H",
+                                "2013 - 1H", "2013 - 2H", "2014 - 1H"];
+
+  				var buttons = d3.select("div")
+            .append("div")
+            .attr("class", "years_buttons")
+            .selectAll("div")
+            .data(time_period)
+            .enter()
+            .append("div")
+            .text(function(d) {
+                return d;
+            });
+
+            //When clicking the year, transisiton the viz to that year
+
+  				buttons.on("click", function(d) {
+              d3.select(".years_buttons")
+                .selectAll("div")
+                .transition()
+                .duration(300)
+                .style("color", "white")
+                .style("background", "darkblue");
+              d3.select(this)
+                .transition()
+                .duration(300)
+                .style("background", "yellow")
+                .style("color", "purple");
+              //myStoryboard.goToFrame(d);
+  						//myStoryboard.pauseAnimation();
+  						//myStoryboard.storyLabel.remove();
+
+              if (d === myStoryboard.getFrameValue()) {
+                myStoryboard.startAnimation();
+              } else {
+                myStoryboard.goToFrame(d);
+                myStoryboard.pauseAnimation();
+                myStoryboard.storyLabel.remove();
+              }
+            });
+
+
+          myChart.draw();
+        };
+    </script>
+  </head>
+<body>
+  <script type="text/javascript">
+    /*
+    Use D3 to load the CSV file
+    and pass the contents of it to the draw function
+    */
+
+  d3.csv("./ProsperLoan_DataLoad.csv", draw);
+  </script>
+</body>
+</html>
