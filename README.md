@@ -20,21 +20,34 @@ Feedback
 I shared my chart with members of the Udacity community as well as several of my work colleagues.  While the feedback was very positive, I was also provided many useful suggestions for improvement.  Here is a sampling of those suggested improvements: 
 
 •	Consider using your main finding as the title to help drive the message to the audience;
+
 •	You may want to explain which shape is associated with which vertical axis as you definitely don't want to leave the reader guessing. 
+
 •	Increase the size of the time interval legend for easier reading
+
 •	The scale on the right side changes which makes it more difficult to compare or identify trends over time. 
+
 •	Consider adding a short paragraph to explain your main conclusion, this can help the reader to understand the visualization.
-•	It took me a bit to identify which vertical axis went with which data (bars/lines)—maybe you can do something to visually tie them together.  Even though the bars are in the background, for some reason my instinct is that those would be tied to the left axis 
-•	Since the # of loans axis is changing with each time period, it is difficult to make comparisons across time and correlations between # loans and Std dev/avg credit score are lost. I think it would be better to keep the axis set, so those changes are obvious.  
+
+•	It took me a bit to identify which vertical axis went with which data (bars/lines)—maybe you can do something to visually tie them together.  Even though the bars are in the background, for some reason my instinct is that those would be tied to the left axis
+
+•	Since the # of loans axis is changing with each time period, it is difficult to make comparisons across time and correlations between # loans and Std dev/avg credit score are lost. I think it would be better to keep the axis set, so those changes are obvious.
+
 •	It would be nice to create a button or something to click on to start the animation. Otherwise, the chart starts to dancing when I am not ready to read it
+
 •	I think the way you show your standard deviation is odd. Maybe you should create error bar or some shadow instead of two lines for standard deviation
+
 •	The year label could be shown in a more obvious way, e.g. larger size or in the middle of svg
+
 •	I had a hard time to figure out which y axis is for the bar, which one is for the line
 
 The most obvious theme in the feedback was difficulties created by allowing the secondary Y axis to change.  I decided to have a constant scale on that axis as well as color the label of the axis to match the bars so that it would be easier to tell that the bars were being measured by that axis.  I debated adding more notes around what I saw or was hoping to prove in the visualization, but decided against it because I felt it could bias the viewer into seeing what I wanted them to see. 
 
 Resources
 •	http://dimplejs.org/examples_index.html
+
 •	https://www.sitepoint.com/create-data-visualizations-javascript-dimple-d3/
+
 •	http://christopheviau.com/d3list/gallery.html
+
 •	Nanodegree Course Materials
