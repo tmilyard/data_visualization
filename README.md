@@ -41,7 +41,7 @@ I shared my chart with members of the Udacity community as well as several of my
 
 •	I had a hard time to figure out which y axis is for the bar, which one is for the line
 
-The most obvious theme in the feedback was difficulties created by allowing the secondary Y axis to change.  I decided to have a constant scale on that axis as well as color the label of the axis to match the bars so that it would be easier to tell that the bars were being measured by that axis.  I debated adding more notes around what I saw or was hoping to prove in the visualization, but decided against it because I felt it could bias the viewer into seeing what I wanted them to see. 
+The most obvious theme in the feedback was difficulties created by allowing the secondary Y axis to change.  I decided to have a constant scale on that axis as well as add that series to the legend so that it would be easier to know what what was being measured.  I also changed the backgruond color of the buttons to make them easier to see/read.  I debated adding more notes around what I saw or was hoping to prove in the visualization, but decided against it because I felt it could bias the viewer into seeing what I wanted them to see. 
 
 Resources
 
