@@ -1,3 +1,6 @@
+8/17 - Upon getting feedback from my first submission I've left the body of this README file unchanged but am citing the updates to the code at the bottom of this page.
+
+
 Summary
 
 The visualization I created used Prosper loan data which is a peer to peer loan marketplace.  The main data points I focused on are Prosper Loan Rating, which is a relative measure of risk on the loan, as well as, the loan applicant credit score.  The number of loans across Prosper Loan Rating is also displayed and all of the data is from the years 2009-2014.
@@ -56,17 +59,20 @@ Resources
 
 CHANGES AFTER FIRST PROJECT SUBMISSTION AND REJECTION: 
 
-Make title more informative – even a question?
-Add sentence explaining source of data
-Perhaps remove standard deviation
-Fix y axis to start at zero
-Year on x axis 
-Helps number of loans too
-Type of rating be the series
-Number Of instead of #
-Up size of time period label
-Explain what 1H and 2H mean (if keeping time series same)
-Add paragraph to graphic
-Update comments in code per suggestions
-Try out line graph for number of sales
+Updated title and put into the form of a question to help the reader understand better what I hope to communicate.
+
+Added a short paragraph talking about the data and how I was directing my analysis.
+
+Removed standard deviation series as they did not add value. 
+
+Changed the Average Standard Deviation axis to start at zero.
+
+Instead of having the animation iterate over time, I chose to add time to the x axis and instead iterate over the loan rating.  This makes it easier to see that loan demand is rising while average credit scores do slip in some cases when holding rating constant.
+
+Made font size more standard throughout the chart.
+
+Explained that "1H" means "First Half" of the year (same with 2H)
+
+Cleaned up code comments per grader suggestions. 
+
 
