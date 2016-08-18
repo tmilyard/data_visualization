@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="http://d3js.org/d3.v3.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+
+    <style>
+    	h2 {
+        text-align: center;
+        color: blue;
+        font-family: Arial;
+      }
+      h3 {
+        text-align: center;
+        color: black;
+        font-family: Arial;
+      }
+      div.rating_buttons {
+        display: flex;
+        justify-content: center;
+        padding: 30px;
+      }
+      div.rating_buttons div {
+        background-color: rgb(200, 300, 400);
+        padding: 3px;
+        margin: 7px;
+        cursor: pointer;
+      }
+      div.chart {
+        width: 1000px;
+        height: 400px;
+      }
+      div.chart-holder {
+        display: flex;
+        justify-content: center;
+      }
+
+    </style>
+
+    <script type="text/javascript">
+      function draw(data) {
+
+      /*
+        Setup code to build the title and the svg element containing the visualization
+      */
+          "use strict";
+					console.log('data', data);
+
+          d3.select("body")
+          .append("div")
+          .append("h2")
+          .text("Are lenders beginning to accept lower credit scores given the same loan rating?");
+
+          d3.select("body")
+          .append("div")
+          .text("The Great Recession was due in large part to relaxed lending practices.  Prosper, a peer-to-peer lending company, has seen a steady increase in the number of loans during the economic recovery.  This is a positive, but only if standards are kept.  In the last 18 months, the average credit score, especially for the highest rated loans, is seen decreasing when holding overall risk constant.  (Loan risk is indicated by loan rating.  The lowest rating is HR, the highest loan rating is AA.  Note - The drop in 1st Half 2014 loan count is due to many loans still being in a processing status at the time of data capture.");
+
+          d3.select("body")
+          .select("div")
+          .append("div")
+          .attr("class", "chart-holder")
+          .append("div")
+          .attr("class", "chart");
+          var svg = dimple.newSvg(".chart", "100%", "100%");
+      /*
+        Dimple.js Chart construction code
+      */
+
+          var myChart = new dimple.chart(svg, data);
+
+
+          //Set up x axis (Time)
+          var x = myChart.addCategoryAxis("x", "Time Period");
+          x.addOrderRule(["2009 - 2H", "2010 - 1H", "2010 - 2H","2011 - 1H", "2011 - 2H", "2012 - 1H", "2012 - 2H","2013 - 1H", "2013 - 2H", "2014 - 1H"]);
+          x.title = "Years In 6 Month Increments (1H = 1st Half)";
+          x.fontSize = 11;
+          //First calculate the maximum values the y axis can take
+          //so we can set max axis value.
+
+          var max_axis = d3.max(data, function(d) {
+            return parseFloat(d['Average']);
+          });
+          var max_num_loans = d3.max(data, function(d) {
+            return parseFloat(d['# of Loans']);
+          });
+
+
+          //Set up y axis (Estimated Return)
+          var y = myChart.addMeasureAxis("y", "Average");
+          y.overrideMax = max_axis;
+          y.fontSize = 11;
+          y.title = "Average Credit Score";
+
+          var y_num = myChart.addMeasureAxis("y", "# of Loans");
+          y_num.overrideMax = max_num_loans;
+          y_num.fontSize = 11;
+          y.title = "Number of Loans";
+
+				//Add series for median (line and scatter), 5th, and 95th percentile estimated return
+
+          var average = myChart.addSeries("AVERAGE", dimple.plot.line, [x,y]);
+          var num_loans = myChart.addSeries("# OF LOANS", dimple.plot.line, [x,y_num]);
+          myChart.assignColor("# of Loans", "#FF0000", "#FF0000", 0.1);
+
+          var legend = myChart.addLegend("25%", "15%", 150, 50, "left",[num_loans, average]);
+
+          //Set a storyboard to interact/animate by year
+          var myStoryboard = myChart.setStoryboard("Loan Rating", ticker);
+
+          function ticker(e) {
+  					if (e === rating_choice[rating_choice.length -1]){
+  						myStoryboard.pauseAnimation();
+  					}
+  				}
+
+            myStoryboard.autoplay = true;
+            //Add year buttons to the page
+            var rating_choice = ["AA", "A", "B", "C", "D", "E", "HR"];
+
+  				var buttons = d3.select("div")
+            .append("div")
+            .attr("class", "rating_buttons")
+            .selectAll("div")
+            .data(rating_choice)
+            .enter()
+            .append("div")
+            .text(function(d) {
+                return d;
+            });
+
+            //When clicking the year, transiiton the visualization for that year
+
+  				buttons.on("click", function(d) {
+              d3.select(".rating_buttons")
+                .selectAll("div")
+                .transition()
+                .duration(300)
+                .style("color", "white")
+                .style("background", "darkblue");
+              d3.select(this)
+                .transition()
+                .duration(300)
+                .style("background", "yellow")
+                .style("color", "purple");
+
+              if (d === myStoryboard.getFrameValue()) {
+                myStoryboard.startAnimation();
+              } else {
+                myStoryboard.goToFrame(d);
+                myStoryboard.pauseAnimation();
+                myStoryboard.storyLabel.remove();
+              }
+            });
+
+
+          myChart.draw();
+        };
+    </script>
+  </head>
+<body>
+  <script type="text/javascript">
+    /*
+    Use D3 to load the CSV file
+    and pass the contents of it to the draw function
+    */
+
+  d3.csv("./ProsperLoan_DataLoad.csv", draw);
+  </script>
+</body>
+</html>
