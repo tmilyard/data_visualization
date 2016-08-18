@@ -52,3 +52,21 @@ Resources
 •	http://christopheviau.com/d3list/gallery.html
 
 •	Nanodegree Course Materials
+
+
+CHANGES AFTER FIRST PROJECT SUBMISSTION AND REJECTION: 
+
+Make title more informative – even a question?
+Add sentence explaining source of data
+Perhaps remove standard deviation
+Fix y axis to start at zero
+Year on x axis 
+Helps number of loans too
+Type of rating be the series
+Number Of instead of #
+Up size of time period label
+Explain what 1H and 2H mean (if keeping time series same)
+Add paragraph to graphic
+Update comments in code per suggestions
+Try out line graph for number of sales
+
